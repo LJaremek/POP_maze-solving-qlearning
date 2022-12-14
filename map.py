@@ -133,7 +133,7 @@ def simple_gen_map(map_size: str, difficulty_level: str) -> list[list[str]]:
     if map_size == "small":
         size = 7
     if map_size == "big":
-        size = 11
+        size = 12
 
     if difficulty_level == "easy":
         used_blocks = (size**2)*(10/100)
