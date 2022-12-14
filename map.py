@@ -1,5 +1,7 @@
 from random import randint
 
+from termcolor import colored
+
 
 def open_map_from_file(path: str) -> list[list[str]]:
     the_map = []
@@ -63,7 +65,8 @@ def gen_map(
         width: int = 10,
         height: int = 10,
         start: tuple[int, int] = (0, 1),
-        end: tuple[int, int] = None
+        end: tuple[int, int] = None,
+        used_blocks: int = None
         ) -> list[list[str]]:
     """
     12x12 is good number formap size ;)
@@ -82,7 +85,11 @@ def gen_map(
     for _ in range(height-2):
         the_map.insert(1, list(wall + free*(width-2) + wall))
 
-    used = width*height*10/100
+    if used_blocks is None:
+        used = width*height*10/100
+    else:
+        used = used_blocks
+
     tries = 0
     walls_to_check = MAX_WALL_TO_CHECK
     map_check_point = copy_map(the_map)
@@ -108,6 +115,67 @@ def gen_map(
                 used -= MAX_WALL_TO_CHECK
 
     return the_map
+
+
+def simple_gen_map(map_size: str, difficulty_level: str) -> list[list[str]]:
+    """
+    Simple function to generate maze (based on gen_map function).
+
+    Input:
+     * map_size: str - "small" / "big"
+     * difficulty_level: str - "easy" / "hard"
+
+    Output:
+     * maze: list[list[str]]
+    """
+    map_dict = {"wall": "#", "free": " "}
+
+    if map_size == "small":
+        size = 7
+    if map_size == "big":
+        size = 11
+
+    if difficulty_level == "easy":
+        used_blocks = (size**2)*(10/100)
+    if difficulty_level == "hard":
+        used_blocks = (size**2)*(50/100)
+
+    return gen_map(map_dict, size, size, used_blocks=used_blocks)
+
+
+def print_map(
+        the_map: list[list[str]],
+        the_way: list[tuple[int, int]] = None,
+        start_coords: tuple[int, int] = None,
+        end_coords: tuple[int, int] = None,
+        way: str = None,
+        start: str = None,
+        aim: str = None,
+        wall: str = "#"
+        ) -> None:
+
+    if the_way is not None:
+        for x, y in the_way:
+            the_map[x][y] = way
+
+    if set([start_coords, end_coords]) != {None}:
+        the_map[start_coords[0]][start_coords[1]] = start
+        the_map[end_coords[0]][end_coords[1]] = aim
+
+    for row in the_map:
+        colored_row = ""
+        for point in row:
+            if point == wall:
+                colored_row += colored(point, "red")
+            elif point == way:
+                colored_row += colored(point, "green")
+            elif point == start:
+                colored_row += colored(point, "blue")
+            elif point == aim:
+                colored_row += colored(point, "yellow")
+            else:
+                colored_row += point
+        print("".join(colored_row))
 
 
 if __name__ == "__main__":

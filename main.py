@@ -1,6 +1,5 @@
 from q_learning import random_player, train_player, get_way
-from map import gen_map, open_map_from_file
-from termcolor import colored
+from map import gen_map, open_map_from_file, print_map
 
 WIDTH = 10
 HEIGHT = 10
@@ -61,24 +60,7 @@ def main(map_path: str = None) -> None:
     print("... end getting the way.")
     print(f"QTable Player passes the map in {len(the_way)} moves.")
 
-    for x, y in the_way:
-        the_map[x][y] = WAY
-    the_map[start[0]][start[1]] = START
-    the_map[end[0]][end[1]] = AIM
-    for row in the_map:
-        colored_row = ""
-        for point in row:
-            if point == WALL:
-                colored_row += colored(point, "red")
-            elif point == WAY:
-                colored_row += colored(point, "green")
-            elif point == START:
-                colored_row += colored(point, "blue")
-            elif point == AIM:
-                colored_row += colored(point, "yellow")
-            else:
-                colored_row += point
-        print("".join(colored_row))
+    print_map(the_map, the_way, start, end, WAY, START, AIM, WALL)
 
 
 if __name__ == "__main__":
