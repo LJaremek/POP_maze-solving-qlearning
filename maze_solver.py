@@ -1,4 +1,5 @@
 import argparse
+from random import seed
 from time import time
 
 from q_learning import random_player, train_player, get_way
@@ -36,6 +37,11 @@ parser.add_argument(
     help="print generated maze. Available: True/False"
     )
 
+parser.add_argument(
+    "-i", "--seed", type=int, required=False,
+    help="seed for random module"
+    )
+
 args = parser.parse_args()
 
 map_dict = {
@@ -50,14 +56,18 @@ fields_dict = {
     " ": -1
     }
 
-if __name__ == "__main__":
+def maze_solve():
     map_size = args.size
     diff_lvl = args.difficulty
     epochs = args.epochs
     gamma = args.gamma
     beta = args.beta
     print_ = args.print
-
+    seed_ = args.seed
+    
+    if seed_ is not None:
+        seed(seed_)
+    
     start = (1, 1)
     if map_size == "small":
         map_dict["width"] = 7
@@ -105,8 +115,13 @@ if __name__ == "__main__":
     if print_ == "True":
         print_map(the_map, the_way, start, end, "x", "S", "$", "#")
 
-    print(
-        time_map_gen,
-        time_random_player, time_qlearning_player,
-        moves_random_player, moves_qlearning_player
-        )
+        print(
+            time_map_gen,
+            time_random_player, time_qlearning_player,
+            moves_random_player, moves_qlearning_player
+            )
+        
+    return [time_map_gen, time_random_player, time_qlearning_player, moves_random_player, moves_qlearning_player]
+
+if __name__ == "__main__":
+    maze_solve()
