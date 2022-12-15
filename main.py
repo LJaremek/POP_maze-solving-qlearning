@@ -1,8 +1,8 @@
 from q_learning import random_player, train_player, get_way
 from map import gen_map, open_map_from_file, print_map
 
-WIDTH = 10
-HEIGHT = 10
+WIDTH = 13
+HEIGHT = 13
 FREE = " "
 WALL = "#"
 WAY = "x"
@@ -39,7 +39,7 @@ def main(map_path: str = None) -> None:
     print(f"Random Player passes the map in {random_moves} moves.")
 
     print("Start training ...")
-    q_table, path = train_player(epochs=1_000,
+    q_table, path = train_player(epochs=1000,
                                  map_dict=map_dict,
                                  fields_dict=fields_dict,
                                  the_map=the_map,
