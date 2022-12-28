@@ -87,6 +87,9 @@ def maze_solve():
     time_map_gen = time()
     if map_path is not None:
         the_map = open_map_from_file(map_path)
+        map_dict["width"] = len(the_map[0])
+        map_dict["height"] = len(the_map)
+        end = (map_dict["width"]-2, map_dict["height"]-2)
     else:
         the_map = simple_gen_map(map_size, diff_lvl)
 
