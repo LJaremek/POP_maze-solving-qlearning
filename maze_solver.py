@@ -3,7 +3,7 @@ from random import seed
 from time import time
 
 from q_learning import random_player, train_player, get_way
-from map import simple_gen_map, print_map
+from map import simple_gen_map, print_map, open_map_from_file
 
 parser = argparse.ArgumentParser(description="Solve maze and show statistics.")
 
@@ -42,6 +42,11 @@ parser.add_argument(
     help="seed for random module"
     )
 
+parser.add_argument(
+    "-m", "--map", type=str, required=False,
+    help="path to map file"
+    )
+
 args = parser.parse_args()
 
 map_dict = {
@@ -64,6 +69,7 @@ def maze_solve():
     beta = args.beta
     print_ = args.print
     seed_ = args.seed
+    map_path = args.map
     
     if seed_ is not None:
         seed(seed_)
@@ -79,9 +85,13 @@ def maze_solve():
         end = (10, 10)
 
     time_map_gen = time()
-    the_map = simple_gen_map(map_size, diff_lvl)
-    time_map_gen = time() - time_map_gen
+    if map_path is not None:
+        the_map = open_map_from_file(map_path)
+    else:
+        the_map = simple_gen_map(map_size, diff_lvl)
 
+    time_map_gen = time() - time_map_gen
+    
     time_random_player = time()
     moves_random_player = random_player(
             start_coords=start,

@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from time import time
+from matplotlib.ticker import MaxNLocator
 import random
 from map import gen_map
 from q_learning import random_player, train_player, get_way
@@ -86,6 +87,7 @@ def make_plots(qx1, qx2, rx1, rx2, y, parameter, file_name):
     ax1.plot(y, qx1, color="red", marker="o", label="Czas")
     ax11 = ax1.twinx()
     ax11.plot(y, qx2, color="blue", marker="o", label="Kroki")
+    ax11.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax1.legend(loc="upper left")
     ax11.legend(loc="upper right")
     

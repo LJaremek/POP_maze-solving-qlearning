@@ -1,8 +1,8 @@
 from q_learning import random_player, train_player, get_way
 from map import gen_map, open_map_from_file, print_map
 
-WIDTH = 13
-HEIGHT = 13
+WIDTH = 12
+HEIGHT = 12
 FREE = " "
 WALL = "#"
 WAY = "x"
