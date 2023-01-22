@@ -61,7 +61,8 @@ fields_dict = {
     " ": -1
     }
 
-def maze_solve():
+
+def maze_solve() -> list[int]:
     map_size = args.size
     diff_lvl = args.difficulty
     epochs = args.epochs
@@ -70,10 +71,10 @@ def maze_solve():
     print_ = args.print
     seed_ = args.seed
     map_path = args.map
-    
+
     if seed_ is not None:
         seed(seed_)
-    
+
     start = (1, 1)
     if map_size == "small":
         map_dict["width"] = 7
@@ -94,7 +95,7 @@ def maze_solve():
         the_map = simple_gen_map(map_size, diff_lvl)
 
     time_map_gen = time() - time_map_gen
-    
+
     time_random_player = time()
     moves_random_player = random_player(
             start_coords=start,
@@ -133,8 +134,12 @@ def maze_solve():
             time_random_player, time_qlearning_player,
             moves_random_player, moves_qlearning_player
             )
-        
-    return [time_map_gen, time_random_player, time_qlearning_player, moves_random_player, moves_qlearning_player]
+
+    return [
+        time_map_gen, time_random_player, time_qlearning_player,
+        moves_random_player, moves_qlearning_player
+        ]
+
 
 if __name__ == "__main__":
     maze_solve()
