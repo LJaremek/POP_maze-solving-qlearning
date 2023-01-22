@@ -16,11 +16,20 @@ fields_dict = {
     FREE: -1
 }
 
-def solver(width, height, epochs, gamma, beta, blocks_percentage = None, seed = None):
+
+def solver(
+        width: int,
+        height: int,
+        epochs: int,
+        gamma: float,
+        beta: float,
+        blocks_percentage: float = None,
+        seed: int = None
+        ) -> list[int]:
     """
     Returns:
-        List: time_map_gen, time_random_player, 
-              time_qlearning_player, moves_random_player, 
+        List: time_map_gen, time_random_player,
+              time_qlearning_player, moves_random_player,
               moves_qlearning_player
     """
     map_dict = {
@@ -31,14 +40,14 @@ def solver(width, height, epochs, gamma, beta, blocks_percentage = None, seed = 
         "width": width,
         "height": height
         }
-    
+
     if seed is not None:
         random.seed(seed)
     if blocks_percentage is not None:
         blocks = width * height * blocks_percentage
     else:
         blocks = None
-    
+
     start = (1, 1)
     end = (height-2, width-2)
     time_map_gen = time()
@@ -47,8 +56,8 @@ def solver(width, height, epochs, gamma, beta, blocks_percentage = None, seed = 
 
     time_random_player = time()
     moves_random_player = random_player(
-            start_coords= start,
-            end_coords= end,
+            start_coords=start,
+            end_coords=end,
             map_dict=map_dict,
             the_map=the_map
             )
@@ -75,12 +84,21 @@ def solver(width, height, epochs, gamma, beta, blocks_percentage = None, seed = 
 
     moves_qlearning_player = len(the_way)
     # print_map(the_map, the_way, start, end, WAY, START, AIM, WALL)
-    return [time_map_gen, time_random_player, time_qlearning_player, moves_random_player, moves_qlearning_player]
+    return [
+        time_map_gen, time_random_player, time_qlearning_player,
+        moves_random_player, moves_qlearning_player
+        ]
 
 
-def make_plots(qx1, qx2, rx1, rx2, y, parameter, file_name):
+def make_plots(
+        qx1: list[int], qx2: list[int], rx1: list[int], rx2: list[int],
+        y: list[float], parameter: str, file_name: str
+        ) -> None:
+
     fig, (ax1, ax2) = plt.subplots(1, 2)
-    fig.suptitle("Zależności ilości kroków oraz czasu od parametru: "+ parameter)
+    fig.suptitle(
+        f"Zależności ilości kroków oraz czasu od parametru: {parameter}"
+        )
     ax1.set_title("QLearning")
     ax1.set_xlabel("Parametr " + parameter)
     ax1.set_ylabel("Czas")
@@ -90,7 +108,7 @@ def make_plots(qx1, qx2, rx1, rx2, y, parameter, file_name):
     ax11.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax1.legend(loc="upper left")
     ax11.legend(loc="upper right")
-    
+
     ax2.set_title("Random")
     ax2.set_xlabel("Parametr " + parameter)
     ax2.plot(y, rx1, color="red", marker="o", label="Czas")
@@ -99,55 +117,74 @@ def make_plots(qx1, qx2, rx1, rx2, y, parameter, file_name):
     ax21.plot(y, rx2, color="blue", marker="o", label="Kroki")
     ax2.legend(loc="upper left")
     ax21.legend(loc="upper right")
-    
+
     fig.set_size_inches(12, 5)
     fig.tight_layout(pad=1.0)
     plt.show()
     fig.savefig("plots/"+file_name+".jpg")
-    
 
 
-def beta_tests():
-    results = np.empty((0,5))
-    betas = []
+def beta_tests() -> None:
+    results = np.empty((0, 5))
+    betas: list[float] = []
+
     for beta in range(2, 10, 1):
         beta = beta/10
         betas.append(beta)
         result = solver(12, 12, 1500, 0.9, beta, 0.2, 200)
         results = np.vstack((results, np.array(result)))
-    make_plots(results[:, 2], results[:, 4], results[:, 1], results[:, 3], betas, "Beta", "beta_tests")
 
-    
-def gamma_tests():
-    results = np.empty((0,5))
+    make_plots(
+        results[:, 2], results[:, 4], results[:, 1], results[:, 3],
+        betas, "Beta", "beta_tests"
+        )
+
+
+def gamma_tests() -> None:
+    results = np.empty((0, 5))
     gammas = []
+
     for gamma in range(2, 10, 1):
         gamma = gamma/10
         gammas.append(gamma)
         result = solver(12, 12, 1500, gamma, 0.9, 0.2, 200)
         results = np.vstack((results, np.array(result)))
-    make_plots(results[:, 2], results[:, 4], results[:, 1], results[:, 3], gammas, "Gamma", "gamma_tests")
 
-    
-def size_tests():
-    results = np.empty((0,5))
+    make_plots(
+        results[:, 2], results[:, 4], results[:, 1], results[:, 3],
+        gammas, "Gamma", "gamma_tests"
+        )
+
+
+def size_tests() -> None:
+    results = np.empty((0, 5))
     sizes = []
+
     for size in range(5, 13, 1):
         sizes.append(size)
         result = solver(size, size, 1500, 0.9, 0.9, 0.2, 200)
         results = np.vstack((results, np.array(result)))
-    make_plots(results[:, 2], results[:, 4], results[:, 1], results[:, 3], sizes, "Wielkość", "size_tests")
+
+    make_plots(
+        results[:, 2], results[:, 4], results[:, 1], results[:, 3],
+        sizes, "Wielkość", "size_tests"
+        )
 
 
-def hardest_tests():
-    results = np.empty((0,5))
+def hardest_tests() -> None:
+    results = np.empty((0, 5))
     hardests = []
+
     for hardest in range(1, 6, 1):
         hardest = hardest/10
         hardests.append(hardest)
         result = solver(12, 12, 1500, 0.9, 0.9, hardest, 200)
         results = np.vstack((results, np.array(result)))
-    make_plots(results[:, 2], results[:, 4], results[:, 1], results[:, 3], hardests, "Trudność", "hardest_tests")
+
+    make_plots(
+        results[:, 2], results[:, 4], results[:, 1], results[:, 3],
+        hardests, "Trudność", "hardest_tests"
+        )
 
 
 if __name__ == "__main__":
@@ -155,4 +192,3 @@ if __name__ == "__main__":
     gamma_tests()
     size_tests()
     hardest_tests()
-    

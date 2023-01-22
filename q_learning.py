@@ -5,6 +5,7 @@ from map import way_exist
 
 MOVES: tuple[str] = ("w", "s", "a", "d")
 
+
 def random_coords(
         the_map: list,
         aim_coords: tuple,
